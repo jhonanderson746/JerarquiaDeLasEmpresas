@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BDJerarquiaDeEmpresaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="TblDepartamento">
+    <Key>
+      <PropertyRef Name="IdDepartamento" />
+    </Key>
+    <Property Name="IdDepartamento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NomDepartamento" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="NomGerenteDpto" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="TelGerenteDpto" Type="int" />
+    <Property Name="FechaNacimtGerenteDpto" Type="datetime" />
+    <Property Name="FechaInicioGerenciaDpto" Type="datetime" />
+    <Property Name="NitEmpresa" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tblEmpresa">
+    <Key>
+      <PropertyRef Name="NitEmpresa" />
+    </Key>
+    <Property Name="NitEmpresa" Type="int" Nullable="false" />
+    <Property Name="NomEmpresa" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="TelEmpresa" Type="int" />
+    <Property Name="DirEmpresa" Type="varchar" MaxLength="30" />
+  </EntityType>
+  <EntityType Name="tblSubDepartamento">
+    <Key>
+      <PropertyRef Name="IdSubDepartamento" />
+    </Key>
+    <Property Name="IdSubDepartamento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NomSubDepartamento" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="NomGerenteSubDpto" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="TelGerenteSubDpto" Type="int" />
+    <Property Name="FechaNacimtGerenteSubDpto" Type="datetime" />
+    <Property Name="FechaInicioGerenciaSubDpto" Type="datetime" />
+    <Property Name="IdDepartamento" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="fk_tblDepartamento_tblEmpresa">
+    <End Role="tblEmpresa" Type="Self.tblEmpresa" Multiplicity="1" />
+    <End Role="TblDepartamento" Type="Self.TblDepartamento" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblEmpresa">
+        <PropertyRef Name="NitEmpresa" />
+      </Principal>
+      <Dependent Role="TblDepartamento">
+        <PropertyRef Name="NitEmpresa" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_tblSubDepartamento_tblDepartamento">
+    <End Role="TblDepartamento" Type="Self.TblDepartamento" Multiplicity="1" />
+    <End Role="tblSubDepartamento" Type="Self.tblSubDepartamento" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TblDepartamento">
+        <PropertyRef Name="IdDepartamento" />
+      </Principal>
+      <Dependent Role="tblSubDepartamento">
+        <PropertyRef Name="IdDepartamento" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="EliminarEmpresa" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Nit" Type="int" Mode="In" />
+  </Function>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="RegistrarEmpresa" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="nitEmpresa" Type="varchar" Mode="In" />
+    <Parameter Name="nombreEmpresa" Type="varchar" Mode="In" />
+    <Parameter Name="TelEmpresa" Type="int" Mode="In" />
+    <Parameter Name="DirEmpresa" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="BDJerarquiaDeEmpresaModelStoreContainer">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TblDepartamento" EntityType="Self.TblDepartamento" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblEmpresa" EntityType="Self.tblEmpresa" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tblSubDepartamento" EntityType="Self.tblSubDepartamento" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="fk_tblDepartamento_tblEmpresa" Association="Self.fk_tblDepartamento_tblEmpresa">
+      <End Role="tblEmpresa" EntitySet="tblEmpresa" />
+      <End Role="TblDepartamento" EntitySet="TblDepartamento" />
+    </AssociationSet>
+    <AssociationSet Name="fk_tblSubDepartamento_tblDepartamento" Association="Self.fk_tblSubDepartamento_tblDepartamento">
+      <End Role="TblDepartamento" EntitySet="TblDepartamento" />
+      <End Role="tblSubDepartamento" EntitySet="tblSubDepartamento" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="4d25cf49505c4289ba6374fe353a3500" Name="Diagram1">
+        <EntityTypeShape EntityType="BDJerarquiaDeEmpresaModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BDJerarquiaDeEmpresaModel.TblDepartamento" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BDJerarquiaDeEmpresaModel.tblEmpresa" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BDJerarquiaDeEmpresaModel.tblSubDepartamento" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="BDJerarquiaDeEmpresaModel.fk_tblDepartamento_tblEmpresa" ManuallyRouted="false" />
+        <AssociationConnector Association="BDJerarquiaDeEmpresaModel.fk_tblSubDepartamento_tblDepartamento" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

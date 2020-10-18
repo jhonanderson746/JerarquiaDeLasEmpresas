@@ -44,34 +44,35 @@ namespace JerarquiaEmpresa
             TxtDireccion.Text = "";
         }
 
+        void BorrarCamposDepartamento()
+        {
+            TxtDepartamento.Text = "";
+            TxtNomGerenDepart.Text = "";
+            TxtTelGerenteDepartamento.Text = "";
+            TxtFechaNaciGerenteDpto.Text = "";
+            TxtFechaIniGerenciaDpto.Text = "";
+        }
+
+        void BorrarCamposSubDepartamento()
+        {
+            txtNomSubDepartamento.Text = "";
+            txtNomGerentSubDepartamento.Text = "";
+            txtTelGerentSubDepartamento.Text = "";
+            txtFechaNaciGerentSubDpto.Text = "";
+            txtFechaIniGerenSubDpto.Text = "";
+        }
+
 
 
         protected void Page_Load(object sender, EventArgs e)
         {
             ListarEmpresas();
-            //if (!IsPostBack)
-            //{
-
-            //    CalendarioFechaNaciGerentDpto.Visible = false;
-
-            //}
-
-            //DataTable dtClientes = new DataTable();
-
-
-            //ComboboxListaEmpresas.DataSource = BD.tblEmpresa.ToList();
-            //ComboboxListaEmpresas.DataTextField = "NomEmpresa";
-            //ComboboxListaEmpresas.DataValueField = "NitEmpresa";
-            //ComboboxListaEmpresas.DataBind();
-
-
-            //ListarDepartamento();
         }
 
 
         protected void Onclick_RegistrarEmpresa(object sender, EventArgs e)
         {
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "ScriptsActualizarMatricula", "<script>alert('La informacion de la matricula  a sido actualizada correctamente');</script>");
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "Registro", "<script>alert('La informacion de la empresa a sido registrada correctamente');</script>");
 
             string nombre = txtnombreEmpresa.Text;
             string Nit = TxtNitEmpresa.Text;
@@ -106,6 +107,40 @@ namespace JerarquiaEmpresa
 
         }
 
+        protected void tblListaEmpresa_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            
+            int Nit = Convert.ToInt32(((GridView)sender).Rows[e.RowIndex].Cells[1].Text);
+            BD.EliminarEmpresa(Nit);
+            ListarEmpresas();
+        }
+
+        protected void Onclick_RegistrarDepartamento2(object sender, EventArgs e)
+        {
+
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "Registro", "<script>alert('La informacion del departamento  a sido Registrada correctamente');</script>");
+
+
+            string NomDepartamento = TxtDepartamento.Text;
+            string NomGerentDepar = TxtNomGerenDepart.Text;
+            int Telefono = Convert.ToInt32(TxtTelGerenteDepartamento.Text);
+            DateTime FechaNaciGerenteDpto = Convert.ToDateTime(TxtFechaNaciGerenteDpto.Text);
+            DateTime FechaIniGerenciaDpto = Convert.ToDateTime(TxtFechaIniGerenciaDpto.Text);
+            //int ComboListaEmpresas = Convert.ToInt32(ComboboxListaEmpresas.SelectedValue);
+            int Nit = Convert.ToInt32(tblListaEmpresa.SelectedRow.Cells[1].Text);
+
+            BD.RegistrarDepartamento(NomDepartamento, NomGerentDepar, Telefono, FechaNaciGerenteDpto, FechaIniGerenciaDpto, Nit);
+
+            var queryDepartamento = from depart in BD.TblDepartamento
+                                            where depart.NitEmpresa == Nit
+                                            select depart;
+
+            tblListaDepartamento.DataSource = queryDepartamento.ToList();
+            tblListaDepartamento.DataBind();
+
+            BorrarCamposDepartamento();
+
+        }
 
         protected void tblListaDepartamento_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -123,37 +158,17 @@ namespace JerarquiaEmpresa
             btlListaSubDepartamento.DataBind();
         }
 
-        protected void tblListaEmpresa_RowDeleting(object sender, GridViewDeleteEventArgs e)
-        {
-            
-            int Nit = Convert.ToInt32(((GridView)sender).Rows[e.RowIndex].Cells[1].Text);
-            BD.EliminarEmpresa(Nit);
-            ListarEmpresas();
-        }
-
-        protected void Onclick_RegistrarDepartamento2(object sender, EventArgs e)
+        protected void tblListaDepartamento_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
 
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "ScriptsActualizarMatricula", "<script>alert('La informacion de la matricula  a sido actualizada correctamente');</script>");
+            int IdDepartamento = Convert.ToInt32(((GridView)sender).Rows[e.RowIndex].Cells[1].Text);                                       
+            BD.EliminarDepartamento(IdDepartamento);
+            var queryDepartamentoEliminar = from depart in BD.TblDepartamento
+                                       where depart.IdDepartamento == IdDepartamento
+                                        select depart;
 
-
-            string NomDepartamento = TxtDepartamento.Text;
-            string NomGerentDepar = TxtNomGerenDepart.Text;
-            int Telefono = Convert.ToInt32(TxtTelGerenteDepartamento.Text);
-            DateTime FechaNaciGerenteDpto = Convert.ToDateTime(TxtFechaNaciGerenteDpto.Text);
-            DateTime FechaIniGerenciaDpto = Convert.ToDateTime(TxtFechaIniGerenciaDpto.Text);
-            //int ComboListaEmpresas = Convert.ToInt32(ComboboxListaEmpresas.SelectedValue);
-            int Nit = Convert.ToInt32(tblListaEmpresa.SelectedRow.Cells[1].Text);
-
-            //BD.RegistrarEmpresa(Nit, nombre, Telefono, Direccion);
-            BD.RegistrarDepartamento(NomDepartamento, NomGerentDepar, Telefono, FechaNaciGerenteDpto, FechaIniGerenciaDpto, Nit);
-
-            ListarDepartamento();
-
-
-
-
-
+            tblListaDepartamento.DataSource = queryDepartamentoEliminar.ToList();
+            tblListaDepartamento.DataBind();
         }
 
         protected void Onclick_RegistrarSubDepartamento(object sender, EventArgs e)
@@ -167,39 +182,21 @@ namespace JerarquiaEmpresa
             //int ComboListaEmpresas = Convert.ToInt32(ComboboxListaEmpresas.SelectedValue);
             int Departamento = Convert.ToInt32(tblListaDepartamento.SelectedRow.Cells[1].Text);
 
-            //BD.RegistrarEmpresa(Nit, nombre, Telefono, Direccion);
             BD.RegistrarSubDepartamento(NomSubDepartamento, NomGerentSubDepar, TelefonoGerenteSubDpto, FechaNaciGerenteSubDpto, FechaIniGerenciaSubDpto, Departamento);
 
             ListarSubDepartamento();
 
+            BorrarCamposSubDepartamento();
+
         }
 
-
-        //private void ComboboxListaEmpresaSelection_Change(object sender, EventArgs e)
-        //{
-
-
-        //    try
-        //    {
-        //        int nit = 0;
-        //        nit = loobj.CargarCantidad(Convert.ToInt32(cmbProductoVenta.SelectedValue));
-             
-        //    }
-        //    catch
-        //    {
-
-        //    }
-
-        //}
-
-        protected void btlSubDepartamento_SelectedIndexChanged(object sender, EventArgs e)
+        protected void tblListaSubDepartamento_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
 
+            int IdSubDepartamento = Convert.ToInt32(((GridView)sender).Rows[e.RowIndex].Cells[1].Text);
+            BD.EliminarSubDepartamento(IdSubDepartamento);
+            ListarSubDepartamento();
         }
 
-        protected void tblListaEmpresa_SelectedIndexChanged1(object sender, EventArgs e)
-        {
-
-        }
     }
 }

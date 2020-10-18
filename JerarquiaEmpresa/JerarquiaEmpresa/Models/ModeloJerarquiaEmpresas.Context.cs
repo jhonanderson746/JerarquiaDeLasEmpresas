@@ -222,5 +222,23 @@ namespace JerarquiaEmpresa.Models
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
         }
+    
+        public virtual int EliminarDepartamento(Nullable<int> idDepartamento)
+        {
+            var idDepartamentoParameter = idDepartamento.HasValue ?
+                new ObjectParameter("IdDepartamento", idDepartamento) :
+                new ObjectParameter("IdDepartamento", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("EliminarDepartamento", idDepartamentoParameter);
+        }
+    
+        public virtual int EliminarSubDepartamento(Nullable<int> idSubDepartamento)
+        {
+            var idSubDepartamentoParameter = idSubDepartamento.HasValue ?
+                new ObjectParameter("IdSubDepartamento", idSubDepartamento) :
+                new ObjectParameter("IdSubDepartamento", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("EliminarSubDepartamento", idSubDepartamentoParameter);
+        }
     }
 }
